@@ -1,0 +1,34 @@
+Add the shrine and image_processing gem to yourGemfile:
+gem 'shrine','~> 3.3'
+gem 'image_processing','~> 1.12','>= 1.12.1'
+### Run bundle install
+
+
+
+###create shrine.rb under initializer,so you shouldhave `config/initializers/shrine.rb`.
+
+rails generate scaffold Article title body:textimage_data:text
+
+rails db:migrate
+
+class ImageUploader < Shrine
+    Attacher.validate do
+      validate_mime_type %w[image/jpeg image/png image/webp]
+      validate_max_size  1*1024*1024
+    end
+end
+
+
+
+class Article < ApplicationRecord
+    include ImageUploader::Attachment(:image)
+    validates :title, presence: true
+end
+
+
+
+
+
+
+
+
